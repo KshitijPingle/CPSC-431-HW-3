@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CPSC 431 HW-2</title>
+    <title>CPSC 431 HW-3</title>
   </head>
   <body>
     <h1 style="text-align:center">Cal State Fullerton Basketball Statistics</h1>
@@ -125,7 +125,7 @@
               </tr>
 
               <tr>
-               <td colspan="2" style="text-align: center;"><input type="submit" value="Add Name and Address" /></td>
+               <td colspan="2" style="text-align: center;"><input type="submit" value="Add/Modify Names and Addresses" /></td>
               </tr>
             </table>
           </form>
@@ -181,7 +181,7 @@
               </tr>
 
               <tr>
-               <td colspan="2" style="text-align: center;"><input type="submit" value="Add Statistic" /></td>
+               <td colspan="2" style="text-align: center;"><input type="submit" value="Add/Modify Statistics" /></td>
               </tr>
             </table>
           </form>

@@ -16,26 +16,14 @@ $assists    = (int) $_POST['assists'];
 $rebounds   = (int) $_POST['rebounds'];
 
 $colonIndex = strpos($time, ':');
-$timeMin = substr($time, 0, $colonIndex);    // From start until colon
-$timeSec = substr($time, $colonIndex + 1);   // From colon + 1 until the end
+$timeMin = (int)substr($time, 0, $colonIndex);    // From start until colon
+$timeSec = (int)substr($time, $colonIndex + 1);   // From colon + 1 until the end
 
-// Time constraints
-$minInt = (int)$timeMin;
-$secInt = (int)$timeSec;
-if (($minInt < 0) || ($minInt > 40)) {
-  echo '<p>Error: Time in stats has to be in the inclusive range of \'00:01\' and \'40:00\'.<br/>
-  Please try again later.</p>';
-  exit;
-} else if (($timeSec < 1) || ($timeSec > 60)) {
-  echo '<p>Error: Time in stats has to be in the inclusive range of \'00:01\' and \'40:00\'.<br/>
-  Please try again later.</p>';
-  exit;
-} else if (($timeMin == 40) && ($timeSec != 0)) {
-  echo '<p>Error: Time in stats has to be in the inclusive range of \'00:01\' and \'40:00\'.<br/>
-  Please try again later.</p>';
-  exit;
-}
+// Make a statistic object and delegate error handling to it
+$newStat = new PlayerStatistic('', $timeMin, $timeSec, $points, $assists, $rebounds);
 
+$mins = substr($newStat->playingTime(), 0, $colonIndex);      // From start until colon
+$secs = substr($newStat->playingTime(), $colonIndex + 1);     // From colon + 1 until the end
 
 require('PlayerStatistic.php');
 
@@ -57,7 +45,7 @@ try {
 
   // 6 '?' in the query, so 6 variables
   // NOTE: 'i' = int, 'd' = float, 's' = string, 'b' = blob
-  $stmt->bind_param('iiiiii', $id, $timeMin, $timeSec, $points, $assists, $rebounds);
+  $stmt->bind_param('iiiiii', $id, $mins, $secs, $newStat->pointsScored(), $newStat->assists(), $newStat->rebounds());
 
   $stmt->execute();
 
