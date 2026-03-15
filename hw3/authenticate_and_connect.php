@@ -1,7 +1,16 @@
 <?php
 // Call this file at the top of every single html page
 
-require_once('/protected/Adaptation.php');
+echo "Authenticate and Connect .php";
+
+// Added to display extra error logging (VERY USEFUL)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// NOTE: using '/protected/' means looking from the base of Linux
+//       using 'protected/' means looking relatively, and I want that
+require_once('protected/Adaptation.php');
 require_once('Address.php');
 require_once('PlayerStatistic.php');
 
@@ -19,7 +28,7 @@ function sendAuthenticationHeader() {
 function authenticate_and_connect() {
     // Log into database using visitor information
     // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-    $visitor_connection = new mysqli(DATA_BASE_HOST, 'Visitor', DBPASSWORDS['Visitor'], DATA_BASE_NAME);
+    $visitor_connection = new mysqli(DATA_BASE_HOST, 'visitor', DBPASSWORDS['visitor'], DATA_BASE_NAME);
 
 
     if (mysqli_connect_errno()) {
@@ -31,10 +40,32 @@ function authenticate_and_connect() {
     // Check if user has not logged in (we won't have usernames in that case)
     if (!isset($_SERVER['PHP_AUTH_USER'])) {
         sendAuthenticationHeader();
+    }
+
+    // Get username and password
+    $full_name = $_SERVER['PHP_AUTH_USER'];
+    $password = $_SERVER['PHP_AUTH_PW'];
+
+    $first_name = '';
+    $last_name = '';
+
+    if (str_contains($full_name, ' ')) {
+        // Username is in format 'First_Name Last_Name'
+
+        $value = explode(' ', $full_name);
+        if (count($value) >= 2) {
+            // Assume the first word is the first name
+            $first_name = trim($value[0]);
+            // Assume everything else is the last name
+            unset($value[0]); 
+            $last_name = trim(implode(' ', $value));
+        } else {
+            // Only one name entered
+            $last_name = trim($value[0]);
+        }
+
     } else {
-        // Get username and password
-        $full_name = $_SERVER['PHP_AUTH_USER'];
-        $password = $_SERVER['PHP_AUTH_PW'];
+        // Username is in format 'Last_Name, First_Name'
 
         // Let Address class do the error handling for the name
         $new_addr = new Address($full_name);
@@ -47,53 +78,53 @@ function authenticate_and_connect() {
             $first_name = trim($value[1]);
         }
         $last_name = trim($value[0]);
+    }
 
-        // PHP query sequence
-        // 1. Preprare
-        // 2. Bind Param
-        // 3. Execute
-        // 4. Store Result
-        // 5. Bind Result
-        // 6. Fetch
+    // PHP query sequence
+    // 1. Preprare
+    // 2. Bind Param
+    // 3. Execute
+    // 4. Store Result
+    // 5. Bind Result
+    // 6. Fetch
 
-        // Query to get password Hash and User role
-        $query = "SELECT a.PasswordHash, r.RoleName 
-                  FROM Accounts a
-                  JOIN Roles r ON a.RoleID = r.ID
-                  JOIN TeamRoster tr ON a.UserID = tr.ID
-                  WHERE tr.Name_Last = ? AND tr.Name_First = ?";
-        
-        $stmt = $visitor_connection->prepare($query);
-        $stmt->bind_param("ss", $last_name, $first_name);       // 2 's' for 2 strings and 2 '?'
-        $stmt->execute();
+    // Query to get password Hash and User role
+    $query = "SELECT a.PasswordHash, r.RoleName 
+                FROM Accounts a
+                JOIN Roles r ON a.RoleID = r.ID
+                JOIN TeamRoster tr ON a.UserID = tr.ID
+                WHERE tr.Name_Last = ? AND tr.Name_First = ?";
+    
+    $stmt = $visitor_connection->prepare($query);
+    $stmt->bind_param("ss", $last_name, $first_name);       // 2 's' for 2 strings and 2 '?'
+    $stmt->execute();
 
-        $stmt->store_result();      // Note: store_result() requires to be paired with free_result()
+    $stmt->store_result();      // Note: store_result() requires to be paired with free_result()
 
-        // Num of columns in SELECT as to be = Num of vars in bind_result
-        //    2 columns = 2 variables
-        $stmt->bind_result($passHash, $roleName);
+    // Num of columns in SELECT as to be = Num of vars in bind_result
+    //    2 columns = 2 variables
+    $stmt->bind_result($passHash, $roleName);
 
-        // Retrieve one row of information
-        $stmt->fetch();
+    // Retrieve one row of information
+    $stmt->fetch();
 
-        // If we found a password and the passwords match
-        if ($passHash && password_verify($password, $passHash)) {
-            // User is authorized, now connect to database with the correct role
-            $stmt->free_result();           // Free result before closing db connection
-            $visitor_connection->close();
+    // If we found a password and the passwords match
+    if ($passHash && password_verify($password, $passHash)) {
+        // User is authorized, now connect to database with the correct role
+        $stmt->free_result();           // Free result before closing db connection
+        $visitor_connection->close();
 
-            // Log into database using the correct role information
-            // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-            $my_db_connection = new mysqli(DATA_BASE_HOST, $roleName, DBPASSWORDS[$roleName], DATA_BASE_NAME);
+        // Log into database using the correct role information
+        // $db = new mysqli('hostname', 'username', 'password', 'dbname')
+        $my_db_connection = new mysqli(DATA_BASE_HOST, $roleName, DBPASSWORDS[$roleName], DATA_BASE_NAME);
 
-            return $my_db_connection;
+        return $my_db_connection;
 
-        } else {
-            $stmt->free_result();           // Free result before closing db connection
-            $visitor_connection->close();
-            header('WWW-Authenticate: Basic realm="Team Portal"');
-            exit('Invalid Password.');
-        }
+    } else {
+        $stmt->free_result();           // Free result before closing db connection
+        $visitor_connection->close();
+        header('WWW-Authenticate: Basic realm="Team Portal"');
+        exit('Invalid Password.');
     }
 
 

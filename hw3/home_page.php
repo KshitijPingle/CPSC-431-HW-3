@@ -5,32 +5,22 @@
   </head>
   <body>
     <h1 style="text-align:center">Cal State Fullerton Basketball Statistics</h1>
-
-    <?php
+<?php
+      require_once('authenticate_and_connect.php');
       require_once('Address.php');
       require_once('PlayerStatistic.php');
-      require_once('authenticate_and_connect.php');
-
-      // Connect to database
-//////// TO-DO:  Begin Student Region ///////////
-
-      // Added to display extra error logging (VERY USEFUL)
-      ini_set('display_errors', 1);
-      ini_set('display_startup_errors', 1);
-      error_reporting(E_ALL);
 
       // $db = new mysqli('hostname', 'username', 'password', 'dbname')
       // $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
 //////// END-TO-DO:  End Student Region ///////////
 
 
+
+      // Connect to database
+//////// TO-DO:  Begin Student Region ///////////
+
       // if connection was successful
 //////// TO-DO:  Begin Student Region ///////////
-      if (mysqli_connect_errno()) {
-        echo '<p>Error: Could not connect to database.<br/>
-        Please try again later.</p>';
-        exit;
-      }
 //////// END-TO-DO:  End Student Region ///////////
 
 
@@ -60,7 +50,7 @@
         // Prepare, execute, store results, and bind results to local variables
 //////// TO-DO:  Begin Student Region ///////////
         // Prepare statement
-        $stmt = $db->prepare($query);
+        $stmt = $my_db_connection->prepare($query);
         
         // Table does not display without this line
         $search = "%" . $searchTerm . "%";
@@ -78,7 +68,7 @@
                            $avgPoints, $avgAssists, $avgRebounds,
                            $gamesPlayed);
 //////// END-TO-DO:  End Student Region ///////////
-    ?>
+?>
 
     <table style="width: 100%; border:0px solid black; border-collapse:collapse;">
       <tr>
@@ -319,7 +309,7 @@
 
       $stmt->free_result();
       $stmt->close();
-      $db->close();
+      $my_db_connection->close();
 //////// END-TO-DO:  End Student Region ///////////
       ?>
     </table>
