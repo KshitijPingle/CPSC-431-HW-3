@@ -16,28 +16,10 @@ DROP USER IF EXISTS 'visitor', 'player', 'coach', 'manager';
 -- CREATE USER 'coach'@'localhost' IDENTIFIED BY 'coachPassword123';
 
 -- Make all the roles which can connect to the database
-CREATE USER 'visitor'@'localhost' IDENTIFIED BY '', 
-            'player'@'localhost'  IDENTIFIED BY '!player', 
-            'coach'@'localhost'   IDENTIFIED BY '!coach', 
-            'manager'@'localhost' IDENTIFIED BY '!manager';
-
--- Privileges for the visitors
-GRANT SELECT ON TeamRoster TO 'visitor'@'localhost';
-GRANT SELECT ON Accounts TO 'visitor'@'localhost';
-GRANT SELECT ON Roles TO 'visitor'@'localhost';
-
--- Privileges for the Players
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'player'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'player'@'localhost';
-
--- Privileges for Coaches
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'coach'@'localhost';
-GRANT SELECT, UPDATE ON Statistics TO 'coach'@'localhost';
-
--- Privileges for Managers
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'manager'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Accounts TO 'manager'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'manager'@'localhost';
+CREATE USER IF NOT EXISTS 'visitor'@'localhost' IDENTIFIED BY '', 
+                          'player'@'localhost'  IDENTIFIED BY '!player', 
+                          'coach'@'localhost'   IDENTIFIED BY '!coach', 
+                          'manager'@'localhost' IDENTIFIED BY '!manager';
 
 
 CREATE TABLE TeamRoster(
@@ -99,7 +81,7 @@ CREATE TABLE Accounts (
 -- Note: I ran the following command in a linux terminal to generate the hashes:
 --       php -r 'echo password_hash("!Donald Duck", PASSWORD_DEFAULT) . PHP_EOL;'
 
-INSERT INTO Accounts (UserID, PasswordHash) VALUES 
+INSERT INTO Accounts (UserID, RoleID, PasswordHash) VALUES 
     (100, 2, '$2y$10$Qkvc.ByOtqvFSek5knN5ketjZB3auM4hNPo6HyvV7N7JsHQkGH/cy'),
     (101, 2, '$2y$10$NIjb8cQaocIDQnCbs4ixhus6HIlCDVC.6980DDejU4Xzju9Tv3dQO'),
     (107, 2, '$2y$10$QXy3aLZ.BLnYapGOqTqn3e1gzDYrQvNFJkql2BWtiC9zGGn0PttOC'),
@@ -143,3 +125,20 @@ INSERT INTO Statistics VALUES
     (22, 100, 29, 47, 27, 9,  8);
 
 
+-- Privileges for the visitors
+GRANT SELECT ON TeamRoster TO 'visitor'@'localhost';
+GRANT SELECT ON Accounts TO 'visitor'@'localhost';
+GRANT SELECT ON Roles TO 'visitor'@'localhost';
+
+-- Privileges for the Players
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'player'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'player'@'localhost';
+
+-- Privileges for Coaches
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'coach'@'localhost';
+GRANT SELECT, UPDATE ON Statistics TO 'coach'@'localhost';
+
+-- Privileges for Managers
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Accounts TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'manager'@'localhost';
