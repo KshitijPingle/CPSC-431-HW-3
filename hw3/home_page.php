@@ -5,23 +5,19 @@
   </head>
   <body>
     <h1 style="text-align:center">Cal State Fullerton Basketball Statistics</h1>
+      <div style="display: flex; justify-content: flex-start; align-items: center; width: 100%; padding: 10px;">
+        <a href="logout.php" style="text-decoration: none; margin-right: auto;">
+            <button type="button" style="padding: 8px 16px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 4px;">
+                Logout
+            </button>
+        </a>
+
+      <span style="font-weight: bold;">Team Portal</span>
+  </div>
 <?php
       require_once('authenticate_and_connect.php');
       require_once('Address.php');
       require_once('PlayerStatistic.php');
-
-      // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-      // $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
-//////// END-TO-DO:  End Student Region ///////////
-
-
-
-      // Connect to database
-//////// TO-DO:  Begin Student Region ///////////
-
-      // if connection was successful
-//////// TO-DO:  Begin Student Region ///////////
-//////// END-TO-DO:  End Student Region ///////////
 
 
         // Build query to retrieve player's name, address, and averaged statistics from the joined Team Roster and Statistics tables        

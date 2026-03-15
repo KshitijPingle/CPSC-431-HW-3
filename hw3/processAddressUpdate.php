@@ -1,12 +1,7 @@
 <?php
 require_once('config.php');
+require_once('authenticate_and_connect.php');
 
-// Everything works now
-
-// Added to display extra error logging (VERY USEFUL)
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
 
 // Collect data from form
 $firstName = trim($_POST['firstName']);
@@ -35,7 +30,7 @@ if (!preg_match($zipRegex, $zip)) {
   exit("Error: Zip code does not follow the correct pattern");
 }
 
-require('Address.php');
+require_once('Address.php');
 
 // Connect with database
 $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');

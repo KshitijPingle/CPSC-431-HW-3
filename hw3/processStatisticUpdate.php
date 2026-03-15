@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('authenticate_and_connect.php');
 
 // Everything works now
 
@@ -25,7 +26,7 @@ $newStat = new PlayerStatistic('', $timeMin, $timeSec, $points, $assists, $rebou
 $mins = substr($newStat->playingTime(), 0, $colonIndex);      // From start until colon
 $secs = substr($newStat->playingTime(), $colonIndex + 1);     // From colon + 1 until the end
 
-require('PlayerStatistic.php');
+require_once('PlayerStatistic.php');
 
 // Connect with database
 $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');

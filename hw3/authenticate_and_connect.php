@@ -1,8 +1,6 @@
 <?php
 // Call this file at the top of every single html page
 
-echo "Authenticate and Connect .php";
-
 // Added to display extra error logging (VERY USEFUL)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
