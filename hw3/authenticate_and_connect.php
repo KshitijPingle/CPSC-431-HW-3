@@ -17,16 +17,9 @@ function sendAuthenticationHeader() {
 }
 
 function authenticate_and_connect() {
-    static $my_db_connection = null;
-
-    if (isset($my_db_connection)) {
-        // The user has already logged in and connected to the database, don't do anything else
-        return;
-    }
-
     // Log into database using visitor information
     // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-    static $my_db_connection = new mysqli(DATA_BASE_HOST, 'Visitor', DBPASSWORDS['Visitor'], DATA_BASE_NAME);
+    $visitor_connection = new mysqli(DATA_BASE_HOST, 'Visitor', DBPASSWORDS['Visitor'], DATA_BASE_NAME);
 
 
     if (mysqli_connect_errno()) {
@@ -55,6 +48,14 @@ function authenticate_and_connect() {
         }
         $last_name = trim($value[0]);
 
+        // PHP query sequence
+        // 1. Preprare
+        // 2. Bind Param
+        // 3. Execute
+        // 4. Store Result
+        // 5. Bind Result
+        // 6. Fetch
+
         // Query to get password Hash and User role
         $query = "SELECT a.PasswordHash, r.RoleName 
                   FROM Accounts a
@@ -62,7 +63,7 @@ function authenticate_and_connect() {
                   JOIN TeamRoster tr ON a.UserID = tr.ID
                   WHERE tr.Name_Last = ? AND tr.Name_First = ?";
         
-        $stmt = $my_db_connection->prepare($query);
+        $stmt = $visitor_connection->prepare($query);
         $stmt->bind_param("ss", $last_name, $first_name);       // 2 's' for 2 strings and 2 '?'
         $stmt->execute();
 
@@ -72,18 +73,24 @@ function authenticate_and_connect() {
         //    2 columns = 2 variables
         $stmt->bind_result($passHash, $roleName);
 
-        $stmt->free_result();
+        // Retrieve one row of information
+        $stmt->fetch();
 
-        if (password_verify($password, $passHash)) {
+        // If we found a password and the passwords match
+        if ($passHash && password_verify($password, $passHash)) {
             // User is authorized, now connect to database with the correct role
-            $my_db_connection->close();
+            $stmt->free_result();           // Free result before closing db connection
+            $visitor_connection->close();
 
             // Log into database using the correct role information
             // $db = new mysqli('hostname', 'username', 'password', 'dbname')
             $my_db_connection = new mysqli(DATA_BASE_HOST, $roleName, DBPASSWORDS[$roleName], DATA_BASE_NAME);
 
-            // No need to return the db connection since it is static
+            return $my_db_connection;
+
         } else {
+            $stmt->free_result();           // Free result before closing db connection
+            $visitor_connection->close();
             header('WWW-Authenticate: Basic realm="Team Portal"');
             exit('Invalid Password.');
         }
@@ -92,4 +99,10 @@ function authenticate_and_connect() {
 
 }
 
+static $my_db_connection = null;
+
+if (!isset($my_db_connection)) {
+    // The user has not logged into the database
+    $my_db_connection = authenticate_and_connect($my_db_connection);
+}
 ?>

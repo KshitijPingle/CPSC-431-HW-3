@@ -9,6 +9,7 @@
     <?php
       require_once('Address.php');
       require_once('PlayerStatistic.php');
+      require_once('authenticate_and_connect.php');
 
       // Connect to database
 //////// TO-DO:  Begin Student Region ///////////
@@ -19,7 +20,7 @@
       error_reporting(E_ALL);
 
       // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-      $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
+      // $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
 //////// END-TO-DO:  End Student Region ///////////
 
 

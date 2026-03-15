@@ -12,9 +12,6 @@ USE CSUF_Basketball;
 
 DROP USER IF EXISTS 'visitor', 'player', 'coach', 'manager';
 
--- Use the following indepent CREATE statement for user if MariaDB versions conflict
--- CREATE USER 'coach'@'localhost' IDENTIFIED BY 'coachPassword123';
-
 -- Make all the roles which can connect to the database
 CREATE USER IF NOT EXISTS 'visitor'@'localhost' IDENTIFIED BY '', 
                           'player'@'localhost'  IDENTIFIED BY '!player', 
