@@ -13,16 +13,17 @@ $colonIndex = strpos($time, ':');
 $timeMin = (int)substr($time, 0, $colonIndex);    // From start until colon
 $timeSec = (int)substr($time, $colonIndex + 1);   // From colon + 1 until the end
 
+$time_after_checks = $timeMin . ':' . $timeSec;
+
 // Make a statistic object and delegate error handling to it
-$newStat = new PlayerStatistic('', $timeMin, $timeSec, $points, $assists, $rebounds);
+$newStat = new PlayerStatistic('', $time_after_checks, $points, $assists, $rebounds);
 
 // $mins = substr($newStat->playingTime(), 0, $colonIndex);      // From start until colon
 // $secs = substr($newStat->playingTime(), $colonIndex + 1);     // From colon + 1 until the end
 
 require_once('PlayerStatistic.php');
 
-// Connect with database
-// $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
+$inserting = FALSE;
 
 if (mysqli_connect_errno()) {
   echo '<p>Error: Could not connect to database.<br/>
@@ -31,20 +32,45 @@ if (mysqli_connect_errno()) {
 }
 
 try {
-  // 6 columns, so 6 '?'
-  $query = "INSERT INTO Statistics (Player, PlayingTimeMin, PlayingTimeSec, Points, Assists, Rebounds)
-            VALUES (?, ?, ?, ?, ?, ?)";
 
-  $stmt = $my_db_connection->prepare($query);
+  // Check if the stat already exists to know if we are updating or adding a stat
+  $check_query = "SELECT ID FROM Statistics WHERE Player = ?";
+  $check_stmt = $my_db_connection->prepare($check_query);
+  $check_stmt->bind_param('i', $id);
+  $check_stmt->execute();
+  $check_stmt->store_result();
 
   // Convert to variables to avoid an error
   $pts = $newStat->pointsScored();
-  $stat = $newStat->assists();
+  $asst = $newStat->assists();
   $reb = $newStat->rebounds();
 
-  // 6 '?' in the query, so 6 variables
-  // NOTE: 'i' = int, 'd' = float, 's' = string, 'b' = blob
-  $stmt->bind_param('iiiiii', $id, $timeMin, $timeSec, $pts, $stat, $reb);
+  if ($check_stmt->num_rows > 0) {
+    // Update Stat
+
+    $query = "UPDATE Statistics
+             SET PlayingTimeMin = ?, PlayingTimeSec = ?, Points = ?, Assists = ?, Rebounds = ? 
+             WHERE Player = ?";
+    
+    $stmt = $my_db_connection->prepare($query);
+
+    // 6 '?', so 6 variables   (Note: ID has to be the last variable)
+    $stmt->bind_param('iiiiii', $timeMin, $timeSec, $pts, $asst, $reb, $id);
+
+  } else {
+    // Add Stat
+    $inserting = TRUE;
+
+    // 6 columns, so 6 '?'
+    $query = "INSERT INTO Statistics (Player, PlayingTimeMin, PlayingTimeSec, Points, Assists, Rebounds)
+              VALUES (?, ?, ?, ?, ?, ?)";
+
+    $stmt = $my_db_connection->prepare($query);
+
+    // 6 '?' in the query, so 6 variables
+    // NOTE: 'i' = int, 'd' = float, 's' = string, 'b' = blob
+    $stmt->bind_param('iiiiii', $id, $timeMin, $timeSec, $pts, $asst, $reb);
+  }
 
   $stmt->execute();
 
@@ -58,15 +84,14 @@ try {
 }
 
 // Check if we successfully inserted
-if ($stmt->affected_rows <= 0) {
+//    Note: Do not check this if we are updating, since affected_rows will be zero
+if (($inserting) && ($stmt->affected_rows <= 0)) {
   echo"<p>Error: Insert statement made no changes to the database.<br/>
   Please try again later.</p>";
-  echo '<p>Caught exception: ';
-  echo $e->getMessage();
-  echo '</p>';
   exit;
 }
 
+$check_stmt->close();
 $stmt->close();
 // Do not close connection to db
 

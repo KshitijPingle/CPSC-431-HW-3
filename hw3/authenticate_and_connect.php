@@ -116,6 +116,8 @@ function authenticate_and_connect() {
         // $db = new mysqli('hostname', 'username', 'password', 'dbname')
         $my_db_connection = new mysqli(DATA_BASE_HOST, $roleName, DBPASSWORDS[$roleName], DATA_BASE_NAME);
 
+        // Save role name in a global array
+        $GLOBALS['role'] = $roleName;
         return $my_db_connection;
 
     } else {

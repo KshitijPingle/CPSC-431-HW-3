@@ -11,14 +11,18 @@
                 Logout
             </button>
         </a>
-
-      <span style="font-weight: bold;">Team Portal</span>
   </div>
 <?php
       require_once('authenticate_and_connect.php');
       require_once('Address.php');
       require_once('PlayerStatistic.php');
 
+      // Display who has logged in
+      echo '<p> User: ';
+      echo $_SERVER['PHP_AUTH_USER'];
+      echo ' has logged into Role: ';
+      echo $GLOBALS['role'];
+      echo '</p>';
 
         // Build query to retrieve player's name, address, and averaged statistics from the joined Team Roster and Statistics tables        
 //////// TO-DO:  Begin Student Region ///////////
