@@ -10,15 +10,34 @@ CREATE DATABASE IF NOT EXISTS   CSUF_Basketball;
 
 USE CSUF_Basketball;
 
-DROP USER IF EXISTS 'coach';
+DROP USER IF EXISTS 'visitor', 'player', 'coach', 'manager';
 
 -- Use the following indepent CREATE statement for user if MariaDB versions conflict
 -- CREATE USER 'coach'@'localhost' IDENTIFIED BY 'coachPassword123';
 
-GRANT SELECT, INSERT, DELETE, UPDATE, EXECUTE 
-    ON CSUF_Basketball.* TO 'coach'@'localhost'
-    IDENTIFIED BY 'coachPassword123';
+-- Make all the roles which can connect to the database
+CREATE USER 'visitor'@'localhost' IDENTIFIED BY '', 
+            'player'@'localhost'  IDENTIFIED BY '!Player', 
+            'coach'@'localhost'   IDENTIFIED BY '!Coach', 
+            'manager'@'localhost' IDENTIFIED BY '!Manager';
 
+-- Privileges for the visitors
+GRANT SELECT ON TeamRoster TO 'visitor'@'localhost';
+GRANT SELECT ON Accounts TO 'visitor'@'localhost';
+GRANT SELECT ON Roles TO 'visitor'@'localhost';
+
+-- Privileges for the Players
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'player'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'player'@'localhost';
+
+-- Privileges for Coaches
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'coach'@'localhost';
+GRANT SELECT, UPDATE ON Statistics TO 'coach'@'localhost';
+
+-- Privileges for Managers
+GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Accounts TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'manager'@'localhost';
 
 
 CREATE TABLE TeamRoster(
@@ -71,7 +90,8 @@ CREATE TABLE Accounts (
     CONSTRAINT fk_user 
         FOREIGN KEY (UserID) REFERENCES TeamRoster(ID) ON DELETE CASCADE,
     CONSTRAINT fk_role 
-        FOREIGN KEY (RoleID) REFERENCES Roles(ID) ON DELETE RESTRICT -- Prevents deleting a role if users are assigned to it
+        FOREIGN KEY (RoleID) REFERENCES Roles(ID) ON DELETE RESTRICT 
+    -- 'Restrict' prevents deleting a role if users are assigned to it
 );
 
 -- The passwords are just '!' followed by the first name and last name exactly as they appear

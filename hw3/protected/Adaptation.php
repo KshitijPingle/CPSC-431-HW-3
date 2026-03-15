@@ -5,8 +5,8 @@
   // define('USER_PASSWORD',  '!_phpWebEngine');
 
 
-  // Define an array holding db accounts with their passwords
-  define('ACCOUNTS', array('Visitor' => '',
+  // Define an array holding db accounts with their db passwords
+  define('DBPASSWORDS', array('Visitor' => '',
                            'Player'  => '!Player', 
                            'Coach'   => '!Coach', 
                            'Manager' => '!Manager'
