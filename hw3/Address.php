@@ -36,9 +36,7 @@ class Address
 
             if( is_string($value) ) 
             {
-                $value = explode(',', $value); // convert string to array 
-
-                // Echo in here
+                $value = explode(',', $value); // convert string to array
          
                 if ( count($value) >= 2 ) $this->name['FIRST'] = htmlspecialchars(trim($value[1]));
                 else                      $this->name['FIRST'] = '';
