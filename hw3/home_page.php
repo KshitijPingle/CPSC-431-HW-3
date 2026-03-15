@@ -284,7 +284,16 @@
         echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $playerID . "</td>";
 
           // NOTE: Use '->' to access functions in PHP
-        echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $address->name() . "</td>"; 
+        echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $address->name();
+
+        // Add the delete button under the name
+        echo "<form method=\"POST\" action=\"delete_player.php\">
+                  <input type=\"hidden\" name=\"player_id\" value=\"{$playerID}\">
+                  <button type=\"submit\" style=\"background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;\">
+                    Delete
+                  </button>
+                </form>
+              </td>"; 
         echo "<td  style=\"vertical-align:top; border:1px solid black;\">" .  $address->street() . "<br/>" . 
               $address->city() . ", " . $address->state() . " " . $address->zip() . "<br/>" . $address->country() . "</td>";
 
