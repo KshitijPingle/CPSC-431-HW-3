@@ -2,6 +2,11 @@
 require_once('config.php');
 require_once('authenticate_and_connect.php');
 
+// If user is not a coach or manager
+if (($GLOBALS['role'] != 'coach') && ($GLOBALS['role'] != 'manager')) {
+    die("Access Denied: Only Coaches and Managers can delete players.");
+}
+
 // Get the player id
 if (!isset($_POST['player_id'])) {
     header("Location: home_page.php");

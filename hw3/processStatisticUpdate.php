@@ -18,10 +18,9 @@ $time_after_checks = $timeMin . ':' . $timeSec;
 // Make a statistic object and delegate error handling to it
 $newStat = new PlayerStatistic('', $time_after_checks, $points, $assists, $rebounds);
 
-// $mins = substr($newStat->playingTime(), 0, $colonIndex);      // From start until colon
-// $secs = substr($newStat->playingTime(), $colonIndex + 1);     // From colon + 1 until the end
-
 require_once('PlayerStatistic.php');
+
+// Note: No requirement in docs to stop players from changing stats of another player
 
 $inserting = FALSE;
 

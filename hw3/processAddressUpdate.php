@@ -32,6 +32,50 @@ if (!preg_match($zipRegex, $zip)) {
 
 require_once('Address.php');
 
+$user_name = $_SERVER['PHP_AUTH_USER'];
+$user_first_name = '';
+$user_last_name = '';
+
+// Check if a player is updating an Address which is not their own
+if ($GLOBALS['role'] == 'player') {
+
+  if (str_contains($user_name, ' ')) {
+    // Username is in format 'First_Name Last_Name'
+
+    $value = explode(' ', $user_name);
+    if (count($value) >= 2) {
+      // Assume the first word is the first name
+      $user_first_name = trim($value[0]);
+      // Assume everything else is the last name
+      unset($value[0]); 
+      $user_last_name = trim(implode(' ', $value));
+    } else {
+      // Only one name entered
+      $user_last_name = trim($value[0]);
+    }
+
+  } else {
+    // Username is in format 'Last_Name, First_Name'
+
+    // Let Address class do the error handling for the name
+    $new_addr = new Address($user_name);
+
+    $user_first_name = '';
+
+    $value = explode(',', $new_addr->name());   // convert string to array
+    if (count($value) >= 2) {
+        // If we have 2 values, then the second value is the first name (Ex. Duck, Donald)
+        $user_first_name = trim($value[1]);
+    }
+    $user_last_name = trim($value[0]);
+  } 
+
+  if (($firstName != $user_first_name) || ($lastName != $user_last_name)) {
+    die("Access Denied: You can only update your own Address.");
+  }
+
+}
+
 $inserting = FALSE;
 
 if (mysqli_connect_errno()) {

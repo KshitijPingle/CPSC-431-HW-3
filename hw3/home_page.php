@@ -286,14 +286,19 @@
           // NOTE: Use '->' to access functions in PHP
         echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $address->name();
 
-        // Add the delete button under the name
-        echo "<form method=\"POST\" action=\"delete_player.php\">
+        // Add the delete button under the name only if user is coach or manager
+        if (($GLOBALS['role'] == 'coach') || ($GLOBALS['role'] == 'manager')) {
+          echo "<form method=\"POST\" action=\"delete_player.php\">
                   <input type=\"hidden\" name=\"player_id\" value=\"{$playerID}\">
                   <button type=\"submit\" style=\"background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;\">
                     Delete
                   </button>
                 </form>
               </td>"; 
+        } else {
+          echo "</td>";
+        }
+        
         echo "<td  style=\"vertical-align:top; border:1px solid black;\">" .  $address->street() . "<br/>" . 
               $address->city() . ", " . $address->state() . " " . $address->zip() . "<br/>" . $address->country() . "</td>";
 
