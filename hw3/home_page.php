@@ -14,9 +14,9 @@
 //////// TO-DO:  Begin Student Region ///////////
 
       // Added to display extra error logging (VERY USEFUL)
-      // ini_set('display_errors', 1);
-      // ini_set('display_startup_errors', 1);
-      // error_reporting(E_ALL);
+      ini_set('display_errors', 1);
+      ini_set('display_startup_errors', 1);
+      error_reporting(E_ALL);
 
       // $db = new mysqli('hostname', 'username', 'password', 'dbname')
       $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');

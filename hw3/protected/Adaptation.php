@@ -6,9 +6,9 @@
 
 
   // Define an array holding db accounts with their db passwords
-  define('DBPASSWORDS', array('Visitor' => '',
-                           'Player'  => '!Player', 
-                           'Coach'   => '!Coach', 
-                           'Manager' => '!Manager'
+  define('DBPASSWORDS', array('visitor' => '',
+                           'player'  => '!player', 
+                           'coach'   => '!coach', 
+                           'manager' => '!manager'
   ));
 ?> 

@@ -26,7 +26,14 @@ function authenticate_and_connect() {
 
     // Log into database using visitor information
     // $db = new mysqli('hostname', 'username', 'password', 'dbname')
-    $my_db_connection = new mysqli(DATA_BASE_HOST, 'Visitor', ACCOUNTS['Visitor'], DATA_BASE_NAME);
+    static $my_db_connection = new mysqli(DATA_BASE_HOST, 'Visitor', DBPASSWORDS['Visitor'], DATA_BASE_NAME);
+
+
+    if (mysqli_connect_errno()) {
+        echo '<p>Error: Could not connect to database.<br/>
+        Please try again later.</p>';
+        exit;
+      }
 
     // Check if user has not logged in (we won't have usernames in that case)
     if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -48,16 +55,38 @@ function authenticate_and_connect() {
         }
         $last_name = trim($value[0]);
 
-        $query = "SELECT a.PasswordHash 
+        // Query to get password Hash and User role
+        $query = "SELECT a.PasswordHash, r.RoleName 
                   FROM Accounts a
-                  JOIN TeamRoster r ON a.UserID = r.ID
-                  WHERE r.Name_Last = ? AND r.Name_First = ?";
+                  JOIN Roles r ON a.RoleID = r.ID
+                  JOIN TeamRoster tr ON a.UserID = tr.ID
+                  WHERE tr.Name_Last = ? AND tr.Name_First = ?";
         
         $stmt = $my_db_connection->prepare($query);
         $stmt->bind_param("ss", $last_name, $first_name);       // 2 's' for 2 strings and 2 '?'
         $stmt->execute();
 
+        $stmt->store_result();      // Note: store_result() requires to be paired with free_result()
 
+        // Num of columns in SELECT as to be = Num of vars in bind_result
+        //    2 columns = 2 variables
+        $stmt->bind_result($passHash, $roleName);
+
+        $stmt->free_result();
+
+        if (password_verify($password, $passHash)) {
+            // User is authorized, now connect to database with the correct role
+            $my_db_connection->close();
+
+            // Log into database using the correct role information
+            // $db = new mysqli('hostname', 'username', 'password', 'dbname')
+            $my_db_connection = new mysqli(DATA_BASE_HOST, $roleName, DBPASSWORDS[$roleName], DATA_BASE_NAME);
+
+            // No need to return the db connection since it is static
+        } else {
+            header('WWW-Authenticate: Basic realm="Team Portal"');
+            exit('Invalid Password.');
+        }
     }
 
 

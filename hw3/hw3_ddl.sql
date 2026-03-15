@@ -17,9 +17,9 @@ DROP USER IF EXISTS 'visitor', 'player', 'coach', 'manager';
 
 -- Make all the roles which can connect to the database
 CREATE USER 'visitor'@'localhost' IDENTIFIED BY '', 
-            'player'@'localhost'  IDENTIFIED BY '!Player', 
-            'coach'@'localhost'   IDENTIFIED BY '!Coach', 
-            'manager'@'localhost' IDENTIFIED BY '!Manager';
+            'player'@'localhost'  IDENTIFIED BY '!player', 
+            'coach'@'localhost'   IDENTIFIED BY '!coach', 
+            'manager'@'localhost' IDENTIFIED BY '!manager';
 
 -- Privileges for the visitors
 GRANT SELECT ON TeamRoster TO 'visitor'@'localhost';
@@ -63,8 +63,8 @@ INSERT INTO TeamRoster VALUES
     (107, "Mickey",              "Mouse",   "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
     (111, "Pluto",               "Dog",     "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
     (118, "Scrooge",             "McDuck",  "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (119, "Huebert (Heuy)",      "Duck",    "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (123, "Deuteronomy (Dewey)", "Duck",    "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (119, "Huebert",             "Duck",    "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (123, "Deuteronomy",         "Duck",    "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
     (128, "Louise",              "Duck",    "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
     (129, "Phooey",              "Duck",    "1-1 Maihama Urayasu",     "Chiba Prefecture", "Disney Tokyo", "Japan",  NULL),
     (131, "Della",               "Duck",    "77700 Boulevard du Parc", "Coupvray",         "Disney Paris", "France", NULL);
@@ -76,10 +76,10 @@ CREATE TABLE Roles (
     RoleName VARCHAR(50) NOT NULL UNIQUE
 );
 INSERT INTO Roles VALUES
-    (1, "Visitor"),
-    (2, "Player"),
-    (3, "Coach"),
-    (4, "Manager");
+    (1, "visitor"),
+    (2, "player"),
+    (3, "coach"),
+    (4, "manager");
 
 
 CREATE TABLE Accounts (
@@ -95,7 +95,9 @@ CREATE TABLE Accounts (
 );
 
 -- The passwords are just '!' followed by the first name and last name exactly as they appear
--- Ex. Username: Phooey Duck;   Password: '!Phooey Duck'
+-- Ex. Username: 'Phooey Duck';   Password: '!Phooey Duck'
+-- Note: I ran the following command in a linux terminal to generate the hashes:
+--       php -r 'echo password_hash("!Donald Duck", PASSWORD_DEFAULT) . PHP_EOL;'
 
 INSERT INTO Accounts (UserID, PasswordHash) VALUES 
     (100, 2, '$2y$10$Qkvc.ByOtqvFSek5knN5ketjZB3auM4hNPo6HyvV7N7JsHQkGH/cy'),
