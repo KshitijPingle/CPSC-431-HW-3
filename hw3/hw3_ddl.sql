@@ -1,8 +1,8 @@
--- HW 2 DDL file
+-- HW 3 DDL file
 --    Create database and table to manage CSUF's basketball team
 -- Kshitij Pingle
 -- kpingle@csu.fullerton.edu
--- February 29, 2026
+-- 15 March, 2026
 
 
 DROP DATABASE IF EXISTS         CSUF_Basketball;
@@ -25,6 +25,7 @@ CREATE TABLE TeamRoster(
     ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Name_First VARCHAR(100),            -- Prof, you have snake and camel case mixed together, this is exactly how it is in the pdf
     Name_Last VARCHAR(150) NOT NULL,    -- Last Name is a required field
+    PasswordHash VARCHAR(255) NOT NULL,
     Street VARCHAR(250),
     City VARCHAR(100),
     State VARCHAR(100),
@@ -50,6 +51,28 @@ INSERT INTO TeamRoster VALUES
     (129, "Phooey",              "Duck",     "1-1 Maihama Urayasu",     "Chiba Prefecture", "Disney Tokyo", "Japan",  NULL),
     (131, "Della",               "Duck",     "77700 Boulevard du Parc", "Coupvray",         "Disney Paris", "France", NULL);
 
+
+
+CREATE TABLE Roles (
+    ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    RoleName VARCHAR(50) NOT NULL UNIQUE
+);
+INSERT INTO Roles VALUES
+    (0, "Visitor"),
+    (1, "Player"),
+    (2, "Coach"),
+    (3, "Manager");
+
+
+CREATE TABLE Accounts (
+    UserID INT UNSIGNED NOT NULL,
+    RoleID TINYINT UNSIGNED NOT NULL,
+    PRIMARY KEY (UserID, RoleID),
+    CONSTRAINT fk_user 
+        FOREIGN KEY (UserID) REFERENCES TeamRoster(ID) ON DELETE CASCADE,
+    CONSTRAINT fk_role 
+        FOREIGN KEY (RoleID) REFERENCES Roles(ID) ON DELETE CASCADE
+);
 
 
 CREATE TABLE Statistics (
