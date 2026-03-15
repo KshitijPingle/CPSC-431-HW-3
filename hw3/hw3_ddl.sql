@@ -25,7 +25,6 @@ CREATE TABLE TeamRoster(
     ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Name_First VARCHAR(100),            -- Prof, you have snake and camel case mixed together, this is exactly how it is in the pdf
     Name_Last VARCHAR(150) NOT NULL,    -- Last Name is a required field
-    PasswordHash VARCHAR(255) NOT NULL,
     Street VARCHAR(250),
     City VARCHAR(100),
     State VARCHAR(100),
@@ -67,6 +66,7 @@ INSERT INTO Roles VALUES
 CREATE TABLE Accounts (
     UserID INT UNSIGNED NOT NULL,
     RoleID TINYINT UNSIGNED NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
     PRIMARY KEY (UserID, RoleID),
     CONSTRAINT fk_user 
         FOREIGN KEY (UserID) REFERENCES TeamRoster(ID) ON DELETE CASCADE,

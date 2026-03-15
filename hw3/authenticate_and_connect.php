@@ -48,12 +48,16 @@ function authenticate_and_connect() {
         }
         $last_name = trim($value[0]);
 
-        $query = "SELECT PasswordHash FROM TeamRoster WHERE Name_Last = ? AND Name_First = ?";
+        $query = "SELECT a.PasswordHash 
+                  FROM Accounts a
+                  JOIN TeamRoster r ON a.UserID = r.ID
+                  WHERE r.Name_Last = ? AND r.Name_First = ?";
+        
         $stmt = $my_db_connection->prepare($query);
         $stmt->bind_param("ss", $last_name, $first_name);       // 2 's' for 2 strings and 2 '?'
         $stmt->execute();
 
-        
+
     }
 
 
