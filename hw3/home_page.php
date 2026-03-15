@@ -305,7 +305,8 @@
 
       $stmt->free_result();
       $stmt->close();
-      $my_db_connection->close();
+
+      // Do not close connection to db
 //////// END-TO-DO:  End Student Region ///////////
       ?>
     </table>

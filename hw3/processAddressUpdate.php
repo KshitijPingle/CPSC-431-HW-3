@@ -33,7 +33,7 @@ if (!preg_match($zipRegex, $zip)) {
 require_once('Address.php');
 
 // Connect with database
-$db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
+// $db = new mysqli('localhost', 'coach', 'coachPassword123', 'CSUF_Basketball');
 
 if (mysqli_connect_errno()) {
   echo '<p>Error: Could not connect to database.<br/>
@@ -48,7 +48,7 @@ try {
   $query = "INSERT INTO TeamRoster (Name_First, Name_Last, Street, City, State, Country, ZipCode)
             VALUES (?, ?, ?, ?, ?, ?, ?)";
   
-  $stmt = $db->prepare($query);
+  $stmt = $my_db_connection->prepare($query);
 
   // 7 '?' in query, so 7 variables
   $stmt->bind_param('sssssss', $firstName, $lastName, $street, $city, $state, $country, $zip);
@@ -69,7 +69,7 @@ if ($stmt->affected_rows < 0) {
 }
 
 $stmt->close();
-$db->close();
+// Do not close connection to db
 
 // Lexically include and execute the home page file content so the home page is displayed after the update completes
 require('home_page.php');
