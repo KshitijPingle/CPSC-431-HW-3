@@ -40,16 +40,16 @@ CREATE TABLE TeamRoster(
     UNIQUE KEY FullName (Name_Last, Name_First)
 );
 INSERT INTO TeamRoster VALUES 
-    (100, "Donald",              "Duck",     "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
-    (101, "Daisy",               "Duck",     "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",          "USA",    "32830"),
-    (107, "Mickey",              "Mouse",    "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
-    (111, "Pluto",               "Dog",      "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
-    (118, "Scrooge",             "McDuck",   "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (119, "Huebert (Heuy)",      "Duck",     "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (123, "Deuteronomy (Dewey)", "Duck",     "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (128, "Louise",              "Duck",     "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
-    (129, "Phooey",              "Duck",     "1-1 Maihama Urayasu",     "Chiba Prefecture", "Disney Tokyo", "Japan",  NULL),
-    (131, "Della",               "Duck",     "77700 Boulevard du Parc", "Coupvray",         "Disney Paris", "France", NULL);
+    (100, "Donald",              "Duck",    "!Donald Duck",      "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
+    (101, "Daisy",               "Duck",    "!Daisy Duck",       "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",          "USA",    "32830"),
+    (107, "Mickey",              "Mouse",   "!Mickey Mouse",     "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
+    (111, "Pluto",               "Dog",     "!Pluto Dog",        "1313 S Harbour Blvd.",    "Anaheim",          "CA",          "USA",    "92808-3232"),
+    (118, "Scrooge",             "McDuck",  "!Scrooge McDuck",   "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (119, "Huebert (Heuy)",      "Duck",    "!Huebert Duck",     "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (123, "Deuteronomy (Dewey)", "Duck",    "!Dueteronomy Duck", "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (128, "Louise",              "Duck",    "!Louise Duck",      "1180 Seven Seas Dr.",     "Lake Buena Vista", "FL",           "USA",   "32830"),
+    (129, "Phooey",              "Duck",    "!Phoeey Duck",      "1-1 Maihama Urayasu",     "Chiba Prefecture", "Disney Tokyo", "Japan",  NULL),
+    (131, "Della",               "Duck",    "!Della Duck",       "77700 Boulevard du Parc", "Coupvray",         "Disney Paris", "France", NULL);
 
 
 
