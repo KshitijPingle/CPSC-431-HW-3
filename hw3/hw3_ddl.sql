@@ -57,22 +57,37 @@ CREATE TABLE Roles (
     RoleName VARCHAR(50) NOT NULL UNIQUE
 );
 INSERT INTO Roles VALUES
-    (0, "Visitor"),
-    (1, "Player"),
-    (2, "Coach"),
-    (3, "Manager");
+    (1, "Visitor"),
+    (2, "Player"),
+    (3, "Coach"),
+    (4, "Manager");
 
 
 CREATE TABLE Accounts (
-    UserID INT UNSIGNED NOT NULL,
+    UserID INT UNSIGNED NOT NULL PRIMARY KEY, -- UserID alone is the PK to enforce one role per account
     RoleID TINYINT UNSIGNED NOT NULL,
     PasswordHash VARCHAR(255) NOT NULL,
-    PRIMARY KEY (UserID, RoleID),
+    
     CONSTRAINT fk_user 
         FOREIGN KEY (UserID) REFERENCES TeamRoster(ID) ON DELETE CASCADE,
     CONSTRAINT fk_role 
-        FOREIGN KEY (RoleID) REFERENCES Roles(ID) ON DELETE CASCADE
+        FOREIGN KEY (RoleID) REFERENCES Roles(ID) ON DELETE RESTRICT -- Prevents deleting a role if users are assigned to it
 );
+
+-- The passwords are just '!' followed by the first name and last name exactly as they appear
+-- Ex. Username: Phooey Duck;   Password: '!Phooey Duck'
+
+INSERT INTO Accounts (UserID, PasswordHash) VALUES 
+    (100, 2, '$2y$10$Qkvc.ByOtqvFSek5knN5ketjZB3auM4hNPo6HyvV7N7JsHQkGH/cy'),
+    (101, 2, '$2y$10$NIjb8cQaocIDQnCbs4ixhus6HIlCDVC.6980DDejU4Xzju9Tv3dQO'),
+    (107, 2, '$2y$10$QXy3aLZ.BLnYapGOqTqn3e1gzDYrQvNFJkql2BWtiC9zGGn0PttOC'),
+    (111, 2, '$2y$10$qpjtowr5ozEIxBKx3zL2OehYhgjT4St53ggwlaHMBeCS9WSupWioq'),
+    (118, 3, '$2y$10$AqB7QcTPbo61GkglHgQmseOl2qQKb0llfE1w2d1n1CBzh97Pxc0ui'),  -- Scrooge is a coach
+    (119, 2, '$2y$10$I73jkb7ZL5O52KwdNp93GuBLteOB9jkPI6iLSkBVPTt/GBgA0rlJC'),
+    (123, 3, '$2y$10$sZKYDHgXivAeD29rjoU6dO3p7Xp6TFk58cjl9wqdXP11o8nzMi1De'),  -- Deuteronomy is a coach
+    (128, 4, '$2y$10$XfT3l2poy7RmBARiI3s6m.3gwkSIulIt7WMCn99FuMCjForgc8lFO'),  -- Louise is a manager
+    (129, 4, '$2y$10$fy7ugZ85exAKra05wRrZSeL2G4zXKeSYGfi9BZexizv4PfQr.cuoK'),  -- Phooey is a manager
+    (131, 2, '$2y$10$9itj9u0rhg1qqVJKD7FEueTPFpMmsRBqID44bAP16KSxhOgx5sjRy');
 
 
 CREATE TABLE Statistics (
