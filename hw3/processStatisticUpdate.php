@@ -60,6 +60,11 @@ try {
     // Add Stat
     $inserting = TRUE;
 
+    if ($GLOBALS['role'] == 'coach') {
+      // Coaches cannot add or delete player stats
+      die("Access Denied: Coaches cannot add or delete stats");
+    }
+
     // 6 columns, so 6 '?'
     $query = "INSERT INTO Statistics (Player, PlayingTimeMin, PlayingTimeSec, Points, Assists, Rebounds)
               VALUES (?, ?, ?, ?, ?, ?)";
