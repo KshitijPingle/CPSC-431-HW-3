@@ -2,9 +2,9 @@
 // Call this file at the top of every single html page
 
 // Added to display extra error logging (VERY USEFUL)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 // NOTE: using '/protected/' means looking from the base of Linux
 //       using 'protected/' means looking relatively, and I want that
@@ -47,22 +47,7 @@ function authenticate_and_connect() {
     $first_name = '';
     $last_name = '';
 
-    if (str_contains($full_name, ' ')) {
-        // Username is in format 'First_Name Last_Name'
-
-        $value = explode(' ', $full_name);
-        if (count($value) >= 2) {
-            // Assume the first word is the first name
-            $first_name = trim($value[0]);
-            // Assume everything else is the last name
-            unset($value[0]); 
-            $last_name = trim(implode(' ', $value));
-        } else {
-            // Only one name entered
-            $last_name = trim($value[0]);
-        }
-
-    } else {
+    if (str_contains($full_name, ',')) {
         // Username is in format 'Last_Name, First_Name'
 
         // Let Address class do the error handling for the name
@@ -76,6 +61,20 @@ function authenticate_and_connect() {
             $first_name = trim($value[1]);
         }
         $last_name = trim($value[0]);
+    } else {
+        // Username is in format 'First_Name Last_Name'
+
+        $value = explode(' ', $full_name);
+        if (count($value) >= 2) {
+            // Assume the first word is the first name
+            $first_name = trim($value[0]);
+            // Assume everything else is the last name
+            unset($value[0]); 
+            $last_name = trim(implode(' ', $value));
+        } else {
+            // Only one name entered
+            $last_name = trim($value[0]);
+        }
     }
 
     // PHP query sequence

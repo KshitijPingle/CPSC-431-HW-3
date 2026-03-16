@@ -311,7 +311,24 @@
           echo "<td  style=\"border:1px solid black; border-collapse:collapse; background: #e6e6e6;\"></td>";
         } else {
           // Player has played games, display that information
-          echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $gamesPlayed . "</td>";
+          echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $gamesPlayed;
+
+          // Stat Delete button
+          if (($GLOBALS['role'] == 'manager') || ($GLOBALS['role'] == 'player')) {
+            // Managers and Players can delete stats
+            //    Note: Handle players deleting only their stats in delete_stats.php
+
+            echo "<form method='POST' action='delete_stats.php'>
+                    <input type='hidden' name='player_id' value='{$playerID}'>
+                    <button type='submit' style='background-color: #f0ad4e; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;'>
+                      Delete Stats
+                    </button>
+                    </form>
+                </td>";
+          } else {
+            echo "</td>";
+          }
+
           echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $statistic->playingTime() . "</td>";
           echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $statistic->pointsScored() . "</td>";
           echo "<td  style=\"vertical-align:top; border:1px solid black;\">" . $statistic->assists() . "</td>";
