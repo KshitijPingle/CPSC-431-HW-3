@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS   CSUF_Basketball;
 
 USE CSUF_Basketball;
 
-DROP USER IF EXISTS 'visitor', 'player', 'coach', 'manager';
+DROP USER IF EXISTS 'visitor'@'localhost', 'player'@'localhost', 'coach'@'localhost', 'manager'@'localhost';
 
 -- Make all the roles which can connect to the database
 CREATE USER IF NOT EXISTS 'visitor'@'localhost' IDENTIFIED BY '', 
@@ -123,19 +123,19 @@ INSERT INTO Statistics VALUES
 
 
 -- Privileges for the visitors
-GRANT SELECT ON TeamRoster TO 'visitor'@'localhost';
-GRANT SELECT ON Accounts TO 'visitor'@'localhost';
-GRANT SELECT ON Roles TO 'visitor'@'localhost';
+GRANT SELECT ON CSUF_Basketball.TeamRoster TO 'visitor'@'localhost';
+GRANT SELECT ON CSUF_Basketball.Accounts TO 'visitor'@'localhost';
+GRANT SELECT ON CSUF_Basketball.Roles TO 'visitor'@'localhost';
 
 -- Privileges for the Players
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'player'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'player'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.TeamRoster TO 'player'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.Statistics TO 'player'@'localhost';
 
 -- Privileges for Coaches
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'coach'@'localhost';
-GRANT SELECT, UPDATE ON Statistics TO 'coach'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.TeamRoster TO 'coach'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.Statistics TO 'coach'@'localhost';
 
 -- Privileges for Managers
-GRANT SELECT, INSERT, UPDATE, DELETE ON TeamRoster TO 'manager'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Accounts TO 'manager'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON Statistics TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.TeamRoster TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.Accounts TO 'manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON CSUF_Basketball.Statistics TO 'manager'@'localhost';
